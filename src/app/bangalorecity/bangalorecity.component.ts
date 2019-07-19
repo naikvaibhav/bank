@@ -6,8 +6,9 @@ import { BankhttpService } from '../bankhttp.service';
 /*importing selection model to provide checkboxes to the list of banks*/
 import { SelectionModel } from '@angular/cdk/collections';
 
+//transfered interface to models to reduce code redundancy
 /*interface for the json data present in the api*/
-export interface User {
+/*export interface User {
   ifsc: string;
   bank_id: string;
   branch: string;
@@ -16,7 +17,7 @@ export interface User {
   district: string,
   state: string,
   bank_name: string
-}
+}*/
 
 @Component({
   selector: 'app-bangalorecity',
@@ -43,10 +44,13 @@ export class BangalorecityComponent implements OnInit {
   dataSource;
   user;
   data
-  users: User[];
+  //users: User[];
+  users: BankModel[];
 
 
-  selection = new SelectionModel<User>(true, []);
+  //selection = new SelectionModel<User>(true, []);
+  selection = new SelectionModel<BankModel>(true, []);
+
 
   @ViewChild('button') button: ElementRef;
 
@@ -70,12 +74,20 @@ export class BangalorecityComponent implements OnInit {
   }
 
   /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: User): string {
+  /*checkboxLabel(row?: User): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.ifsc + 1}`;
+  }*/
+  checkboxLabel(row?: BankModel): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.ifsc + 1}`;
   }
+
+
 
   constructor(public bankHttpService: BankhttpService) {
     console.log('Bangalore city component constructor is called');
@@ -90,10 +102,25 @@ export class BangalorecityComponent implements OnInit {
   }
 
   ngOnInit() {
+    //this code if we dont want to cache the api calls
+    //console.log('Bangalore city component onInit called');
+    /*subscribing to the services*/
+    //this.bankHttpService.getBangaloreBranches()
+    //.subscribe((users: User[]) => {
+
+    //this.users = users;
+
+    //this.dataSource = new MatTableDataSource(users);
+
+    //this.dataSource.paginator = this.paginator;
+
+    //this.dataSource.sort = this.sort;
+    //});
+
     console.log('Bangalore city component onInit called');
     /*subscribing to the services*/
     this.bankHttpService.getBangaloreBranches()
-      .subscribe((users: User[]) => {
+      .subscribe((users: BankModel[]) => {
 
         this.users = users;
 

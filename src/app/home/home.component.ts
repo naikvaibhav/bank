@@ -7,9 +7,9 @@ import { BankhttpService } from '../bankhttp.service';
 /*importing selection model to provide checkboxes to the list of banks*/
 import { SelectionModel } from '@angular/cdk/collections';
 
-
+//transfered interface to models to reduce code redundancy
 /*interface for the json data present in the api*/
-export interface User {
+/*export interface User {
   ifsc: string;
   bank_id: string;
   branch: string;
@@ -18,7 +18,8 @@ export interface User {
   district: string,
   state: string,
   bank_name: string
-}
+}*/
+
 
 @Component({
   selector: 'app-home',
@@ -45,10 +46,11 @@ export class HomeComponent implements OnInit {
   dataSource;
   user;
   data
-  users: User[];
+  //users: User[];
+  users: BankModel[];
 
-
-  selection = new SelectionModel<User>(true, []);
+  //selection = new SelectionModel<User>(true, []);
+  selection = new SelectionModel<BankModel>(true, []);
 
   @ViewChild('button') button: ElementRef;
 
@@ -71,7 +73,14 @@ export class HomeComponent implements OnInit {
   }
 
   /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: User): string {
+  /*checkboxLabel(row?: User): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.ifsc + 1}`;
+  }*/
+
+  checkboxLabel(row?: BankModel): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
@@ -94,9 +103,23 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     console.log('Home component onIniti called');
+    //this code if we dont want to cache the api calls
     /*subscribing to the services*/
-    this.bankHttpService.getMumbaiBranches()
+    /*this.bankHttpService.getMumbaiBranches()
       .subscribe((users: User[]) => {
+
+        this.users = users;
+
+        this.dataSource = new MatTableDataSource(users);
+
+
+        this.dataSource.paginator = this.paginator;
+
+        this.dataSource.sort = this.sort;
+
+      }); */
+    this.bankHttpService.getMumbaiBranches()
+      .subscribe((users: BankModel[]) => {
 
         this.users = users;
 
